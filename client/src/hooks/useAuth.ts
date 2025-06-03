@@ -1,30 +1,25 @@
-import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useAuth() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await fetch("/api/auth/me", {
-          credentials: 'include', // Include session cookies
-        });
-
-        if (response.ok) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        setIsAuthenticated(false);
+  const queryClient = useQueryClient();
+  
+  const { data: authData, isLoading } = useQuery({
+    queryKey: ["/api/auth/me"],
+    queryFn: async () => {
+      const response = await fetch("/api/auth/me", {
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        return { isAuthenticated: false, user: null };
       }
       
-      setIsLoading(false);
-    };
-
-    checkAuth();
-  }, []);
+      const data = await response.json();
+      return { isAuthenticated: true, user: data.user };
+    },
+    retry: false,
+    refetchInterval: 30000, // Check every 30 seconds
+  });
 
   const logout = async () => {
     try {
@@ -36,13 +31,15 @@ export function useAuth() {
       console.error("Logout error:", error);
     }
     
-    setIsAuthenticated(false);
+    // Update auth state immediately
+    queryClient.setQueryData(["/api/auth/me"], { isAuthenticated: false, user: null });
     window.location.href = "/";
   };
 
   return {
-    isAuthenticated,
+    user: authData?.user || null,
     isLoading,
+    isAuthenticated: authData?.isAuthenticated || false,
     logout,
   };
 }

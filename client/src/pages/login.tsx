@@ -33,10 +33,13 @@ export default function Login() {
         title: "Login successful",
         description: "Welcome to the admin panel",
       });
-      // Invalidate auth queries to refresh authentication state
+      // Force refresh authentication state immediately
       queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+      queryClient.refetchQueries({ queryKey: ["/api/auth/me"] });
       // Redirect to admin panel
-      window.location.href = "/admin";
+      setTimeout(() => {
+        window.location.href = "/admin";
+      }, 100);
     },
     onError: (error: any) => {
       toast({
