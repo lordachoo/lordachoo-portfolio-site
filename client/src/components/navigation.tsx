@@ -135,13 +135,25 @@ export function Navigation({ className }: NavigationProps) {
           </nav>
 
           {/* Admin Access */}
-          <div className="p-4 border-t border-border">
+          <div className="p-4 border-t border-border space-y-2">
             <Link href="/admin">
               <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground text-muted-foreground transition-colors cursor-pointer">
                 <Settings className="w-5 h-5" />
                 <span>Admin Panel</span>
               </div>
             </Link>
+            
+            {isAuthenticated && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={logout}
+                className="w-full flex items-center space-x-2"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </Button>
+            )}
           </div>
         </div>
       </aside>
