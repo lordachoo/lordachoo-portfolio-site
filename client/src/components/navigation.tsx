@@ -116,9 +116,9 @@ export function Navigation({ className }: NavigationProps) {
               
               return (
                 <Link key={item.id} href={href === "/home" ? "/" : href}>
-                  <a
+                  <div
                     className={cn(
-                      "sidebar-item flex items-center space-x-3 p-3 rounded-lg transition-all duration-200",
+                      "sidebar-item flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 cursor-pointer",
                       isActive
                         ? "bg-primary text-primary-foreground"
                         : "hover:bg-accent hover:text-accent-foreground text-muted-foreground"
@@ -126,7 +126,7 @@ export function Navigation({ className }: NavigationProps) {
                   >
                     <i className={`${item.icon} w-5 h-5`} />
                     <span>{item.label}</span>
-                  </a>
+                  </div>
                 </Link>
               );
             })}
@@ -135,10 +135,10 @@ export function Navigation({ className }: NavigationProps) {
           {/* Admin Access */}
           <div className="p-4 border-t border-border">
             <Link href="/admin">
-              <a className="flex items-center space-x-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground text-muted-foreground transition-colors">
+              <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground text-muted-foreground transition-colors cursor-pointer">
                 <Settings className="w-5 h-5" />
                 <span>Admin Panel</span>
-              </a>
+              </div>
             </Link>
           </div>
         </div>
