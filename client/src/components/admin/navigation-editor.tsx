@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,17 +9,115 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Plus, Edit, Trash2, GripVertical } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { NavigationItem, InsertNavigationItem } from "@shared/schema";
+
+// Sortable Navigation Item Component
+function SortableNavigationItem({ 
+  item, 
+  onEdit, 
+  onDelete 
+}: { 
+  item: NavigationItem; 
+  onEdit: (item: NavigationItem) => void; 
+  onDelete: (id: number) => void; 
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: item.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50"
+    >
+      <div className="flex items-center space-x-3">
+        <div
+          {...attributes}
+          {...listeners}
+          className="cursor-move"
+        >
+          <GripVertical className="h-4 w-4 text-muted-foreground" />
+        </div>
+        <i className={`${item.icon} w-4 h-4`} />
+        <span className="font-medium">{item.label}</span>
+        <span className="text-sm text-muted-foreground">→ {item.href}</span>
+        {!item.isVisible && (
+          <span className="text-xs bg-muted px-2 py-1 rounded">Hidden</span>
+        )}
+      </div>
+      <div className="flex space-x-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onEdit(item)}
+        >
+          <Edit className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onDelete(item.id)}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 export function NavigationEditor() {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<NavigationItem | null>(null);
   const [formData, setFormData] = useState<Partial<InsertNavigationItem>>({});
+  const [localItems, setLocalItems] = useState<NavigationItem[]>([]);
 
   const { data: navigationItems = [] } = useQuery<NavigationItem[]>({
     queryKey: ["/api/navigation"],
   });
+
+  // Update local items when data changes
+  React.useEffect(() => {
+    if (navigationItems.length > 0) {
+      setLocalItems([...navigationItems].sort((a, b) => a.order - b.order));
+    }
+  }, [navigationItems]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const createItemMutation = useMutation({
     mutationFn: async (data: InsertNavigationItem) => {
@@ -69,6 +167,7 @@ export function NavigationEditor() {
 
   const deleteItemMutation = useMutation({
     mutationFn: async (id: number) => {
+      console.log("Deleting navigation item:", id);
       return await apiRequest(`/api/navigation/${id}`, { method: "DELETE" });
     },
     onSuccess: () => {
@@ -76,6 +175,42 @@ export function NavigationEditor() {
       toast({
         title: "Navigation item deleted",
         description: "The navigation item has been removed.",
+      });
+    },
+    onError: (error) => {
+      console.error("Failed to delete navigation item:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete navigation item. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const reorderItemsMutation = useMutation({
+    mutationFn: async (items: NavigationItem[]) => {
+      // Update order for each item
+      const updates = items.map((item, index) => 
+        apiRequest(`/api/navigation/${item.id}`, {
+          method: "PUT",
+          body: JSON.stringify({ order: index })
+        })
+      );
+      return Promise.all(updates);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/navigation"] });
+      toast({
+        title: "Navigation order updated",
+        description: "The navigation items have been reordered.",
+      });
+    },
+    onError: (error) => {
+      console.error("Failed to reorder navigation items:", error);
+      toast({
+        title: "Error", 
+        description: "Failed to reorder navigation items.",
+        variant: "destructive",
       });
     },
   });

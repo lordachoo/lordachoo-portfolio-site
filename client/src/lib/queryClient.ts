@@ -21,6 +21,15 @@ export async function apiRequest(
   });
 
   await throwIfResNotOk(response);
+  
+  // Handle responses that might not have JSON content (like DELETE 204)
+  const contentLength = response.headers.get("content-length");
+  const contentType = response.headers.get("content-type");
+  
+  if (contentLength === "0" || response.status === 204 || !contentType?.includes("application/json")) {
+    return null;
+  }
+  
   return response.json();
 }
 
