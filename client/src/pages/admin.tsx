@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { NavigationEditor } from "@/components/admin/navigation-editor";
 import { BlogEditor } from "@/components/admin/blog-editor";
 import { ResumeEditor } from "@/components/admin/resume-editor";
 import { ProjectsEditor } from "@/components/admin/projects-editor";
+import { useAuth } from "@/hooks/useAuth";
 import { 
   Database, 
   Server, 
@@ -18,6 +19,8 @@ import {
   FileText,
   Navigation as NavigationIcon,
   MessageSquare,
+  LogOut,
+  Shield,
   Briefcase,
   Code,
   User
