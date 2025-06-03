@@ -36,7 +36,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/navigation", async (req, res) => {
+  // Protected admin endpoints (require authentication)
+  app.post("/api/navigation", isAuthenticated, async (req, res) => {
     try {
       const data = insertNavigationItemSchema.parse(req.body);
       const item = await storage.createNavigationItem(data);
@@ -50,7 +51,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/navigation/:id", async (req, res) => {
+  app.put("/api/navigation/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const data = insertNavigationItemSchema.partial().parse(req.body);
@@ -65,7 +66,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/navigation/:id", async (req, res) => {
+  app.delete("/api/navigation/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       await storage.deleteNavigationItem(id);
@@ -89,7 +90,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/content/:sectionKey", async (req, res) => {
+  app.put("/api/content/:sectionKey", isAuthenticated, async (req, res) => {
     try {
       const data = insertContentSectionSchema.parse({
         ...req.body,
@@ -131,7 +132,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/blog", async (req, res) => {
+  app.post("/api/blog", isAuthenticated, async (req, res) => {
     try {
       const data = insertBlogPostSchema.parse(req.body);
       const post = await storage.createBlogPost(data);
@@ -145,7 +146,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/blog/:id", async (req, res) => {
+  app.put("/api/blog/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const data = insertBlogPostSchema.partial().parse(req.body);
@@ -160,7 +161,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/blog/:id", async (req, res) => {
+  app.delete("/api/blog/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       await storage.deleteBlogPost(id);
@@ -180,7 +181,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/experience", async (req, res) => {
+  app.post("/api/experience", isAuthenticated, async (req, res) => {
     try {
       const data = insertExperienceSchema.parse(req.body);
       const experience = await storage.createExperience(data);
@@ -194,7 +195,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/experience/:id", async (req, res) => {
+  app.put("/api/experience/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const data = insertExperienceSchema.partial().parse(req.body);
@@ -209,7 +210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/experience/:id", async (req, res) => {
+  app.delete("/api/experience/:id", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       await storage.deleteExperience(id);
