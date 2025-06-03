@@ -148,6 +148,7 @@ export function NavigationEditor() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/navigation"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/navigation", "admin"] });
       setIsDialogOpen(false);
       setFormData({});
       toast({
@@ -174,6 +175,7 @@ export function NavigationEditor() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/navigation"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/navigation", "admin"] });
       setIsDialogOpen(false);
       setEditingItem(null);
       setFormData({});
@@ -191,6 +193,7 @@ export function NavigationEditor() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/navigation"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/navigation", "admin"] });
       toast({
         title: "Navigation item deleted",
         description: "The navigation item has been removed.",
@@ -219,6 +222,7 @@ export function NavigationEditor() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/navigation"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/navigation", "admin"] });
       toast({
         title: "Navigation order updated",
         description: "The navigation items have been reordered.",
