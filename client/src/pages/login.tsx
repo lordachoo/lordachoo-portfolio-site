@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,7 @@ export default function Login() {
     password: "",
   });
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const loginMutation = useMutation({
     mutationFn: async (data: { username: string; password: string }) => {
@@ -23,16 +24,17 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
       });
       return response;
     },
     onSuccess: (data) => {
-      // Store the token
-      localStorage.setItem("adminToken", data.token);
       toast({
         title: "Login successful",
         description: "Welcome to the admin panel",
       });
+      // Invalidate auth queries to refresh authentication state
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
       // Redirect to admin panel
       window.location.href = "/admin";
     },
