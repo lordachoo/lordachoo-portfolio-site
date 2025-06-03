@@ -1,6 +1,6 @@
 import { 
   navigationItems, contentSections, blogPosts, experiences, education, 
-  skillCategories, skills, projects, profile, users,
+  skillCategories, skills, projects, profile, adminUsers, adminSessions,
   type NavigationItem, type InsertNavigationItem,
   type ContentSection, type InsertContentSection,
   type BlogPost, type InsertBlogPost,
@@ -10,15 +10,20 @@ import {
   type Skill, type InsertSkill,
   type Project, type InsertProject,
   type Profile, type InsertProfile,
-  type User, type UpsertUser
+  type AdminUser, type InsertAdminUser,
+  type AdminSession, type InsertAdminSession
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, asc } from "drizzle-orm";
 
 export interface IStorage {
-  // User operations (required for authentication)
-  getUser(id: string): Promise<User | undefined>;
-  upsertUser(user: UpsertUser): Promise<User>;
+  // Admin authentication operations
+  getAdminByUsername(username: string): Promise<AdminUser | undefined>;
+  createAdminUser(user: InsertAdminUser): Promise<AdminUser>;
+  createAdminSession(session: InsertAdminSession): Promise<AdminSession>;
+  getAdminSession(sessionId: string): Promise<AdminSession | undefined>;
+  deleteAdminSession(sessionId: string): Promise<void>;
+  updateAdminLastLogin(userId: number): Promise<void>;
 
   // Navigation
   getNavigationItems(): Promise<NavigationItem[]>;
@@ -74,25 +79,35 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
-  // User operations (required for authentication)
-  async getUser(id: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
+  // Admin authentication operations
+  async getAdminByUsername(username: string): Promise<AdminUser | undefined> {
+    const [user] = await db.select().from(adminUsers).where(eq(adminUsers.username, username));
     return user;
   }
 
-  async upsertUser(userData: UpsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values(userData)
-      .onConflictDoUpdate({
-        target: users.id,
-        set: {
-          ...userData,
-          updatedAt: new Date(),
-        },
-      })
-      .returning();
+  async createAdminUser(userData: InsertAdminUser): Promise<AdminUser> {
+    const [user] = await db.insert(adminUsers).values(userData).returning();
     return user;
+  }
+
+  async createAdminSession(sessionData: InsertAdminSession): Promise<AdminSession> {
+    const [session] = await db.insert(adminSessions).values(sessionData).returning();
+    return session;
+  }
+
+  async getAdminSession(sessionId: string): Promise<AdminSession | undefined> {
+    const [session] = await db.select().from(adminSessions).where(eq(adminSessions.id, sessionId));
+    return session;
+  }
+
+  async deleteAdminSession(sessionId: string): Promise<void> {
+    await db.delete(adminSessions).where(eq(adminSessions.id, sessionId));
+  }
+
+  async updateAdminLastLogin(userId: number): Promise<void> {
+    await db.update(adminUsers)
+      .set({ lastLoginAt: new Date() })
+      .where(eq(adminUsers.id, userId));
   }
 
   // Navigation

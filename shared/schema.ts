@@ -101,26 +101,23 @@ export const projects = pgTable("projects", {
   order: integer("order").notNull().default(0),
 });
 
-// Session storage table for authentication
-export const sessions = pgTable(
-  "sessions",
-  {
-    sid: varchar("sid").primaryKey(),
-    sess: jsonb("sess").notNull(),
-    expire: timestamp("expire").notNull(),
-  },
-  (table) => [index("IDX_session_expire").on(table.expire)],
-);
+// Admin users table for simple authentication
+export const adminUsers = pgTable("admin_users", {
+  id: serial("id").primaryKey(),
+  username: varchar("username", { length: 50 }).unique().notNull(),
+  passwordHash: varchar("password_hash", { length: 255 }).notNull(),
+  salt: varchar("salt", { length: 32 }).notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  lastLoginAt: timestamp("last_login_at"),
+});
 
-// User storage table for authentication
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().notNull(),
-  email: varchar("email").unique(),
-  firstName: varchar("first_name"),
-  lastName: varchar("last_name"),
-  profileImageUrl: varchar("profile_image_url"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+// Admin sessions table
+export const adminSessions = pgTable("admin_sessions", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  userId: integer("user_id").references(() => adminUsers.id).notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // User profile/settings
@@ -198,8 +195,10 @@ export const insertProfileSchema = createInsertSchema(profile).omit({
 });
 
 // Types
-export type UpsertUser = typeof users.$inferInsert;
-export type User = typeof users.$inferSelect;
+export type AdminUser = typeof adminUsers.$inferSelect;
+export type InsertAdminUser = typeof adminUsers.$inferInsert;
+export type AdminSession = typeof adminSessions.$inferSelect;
+export type InsertAdminSession = typeof adminSessions.$inferInsert;
 
 export type NavigationItem = typeof navigationItems.$inferSelect;
 export type InsertNavigationItem = z.infer<typeof insertNavigationItemSchema>;
