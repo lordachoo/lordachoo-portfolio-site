@@ -92,7 +92,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Protected admin endpoints (require authentication)
-  app.post("/api/education/api/navigation", requireAuth, requireAuth, async (req, res) => {
+  app.post("/api/navigation", requireAuth, async (req, res) => {
     try {
       const data = insertNavigationItemSchema.parse(req.body);
       const item = await storage.createNavigationItem(data);
@@ -106,7 +106,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/education/api/navigation/:id", requireAuth, requireAuth, async (req, res) => {
+  app.put("/api/navigation/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const data = insertNavigationItemSchema.partial().parse(req.body);
@@ -121,7 +121,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/education/api/navigation/:id", requireAuth, requireAuth, async (req, res) => {
+  app.delete("/api/navigation/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       await storage.deleteNavigationItem(id);
