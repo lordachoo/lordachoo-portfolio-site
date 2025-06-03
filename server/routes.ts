@@ -182,8 +182,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Blog posts endpoints
-  app.get("/api/blog", requireAuth, async (req, res) => {
+  app.put("/api/content/:sectionKey", requireAuth, async (req, res) => {
+    try {
+      const data = insertContentSectionSchema.parse({
+        ...req.body,
+        sectionKey: req.params.sectionKey,
+      });
+      const section = await storage.upsertContentSection(data);
+      res.json(section);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ error: "Invalid data", details: error.errors });
+      } else {
+        res.status(500).json({ error: "Failed to update content section" });
+      }
+    }
+  });
+
+  // Blog posts endpoints (public read access)
+  app.get("/api/blog", async (req, res) => {
     try {
       const published = req.query.published ? req.query.published === 'true' : undefined;
       const posts = await storage.getBlogPosts(published);
@@ -193,7 +210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/blog/:id", requireAuth, async (req, res) => {
+  app.get("/api/blog/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const post = await storage.getBlogPost(id);
@@ -246,8 +263,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Experience endpoints
-  app.get("/api/experience", requireAuth, async (req, res) => {
+  // Experience endpoints (public read access)
+  app.get("/api/experience", async (req, res) => {
     try {
       const experiences = await storage.getExperiences();
       res.json(experiences);
@@ -295,8 +312,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Education endpoints
-  app.get("/api/education", requireAuth, async (req, res) => {
+  // Education endpoints (public read access)
+  app.get("/api/education", async (req, res) => {
     try {
       const education = await storage.getEducation();
       res.json(education);
@@ -344,8 +361,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Skills endpoints
-  app.get("/api/skills", requireAuth, async (req, res) => {
+  // Skills endpoints (public read access)
+  app.get("/api/skills", async (req, res) => {
     try {
       const skills = await storage.getSkillsWithCategories();
       res.json(skills);
@@ -382,8 +399,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Projects endpoints
-  app.get("/api/projects", requireAuth, async (req, res) => {
+  // Projects endpoints (public read access)
+  app.get("/api/projects", async (req, res) => {
     try {
       const featured = req.query.featured ? req.query.featured === 'true' : undefined;
       const projects = await storage.getProjects(featured);
@@ -432,8 +449,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Profile endpoints
-  app.get("/api/profile", requireAuth, async (req, res) => {
+  // Profile endpoints (public read access)
+  app.get("/api/profile", async (req, res) => {
     try {
       const profile = await storage.getProfile();
       if (!profile) {
