@@ -16,8 +16,11 @@ interface NavigationProps {
 export function Navigation({ className }: NavigationProps) {
   const [location] = useLocation();
   const { theme, toggleTheme } = useTheme();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, isLoading } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Show logout button on admin page or when authenticated
+  const showLogoutButton = isAuthenticated || location.includes('/admin');
 
   const { data: navigationItems = [] } = useQuery<NavigationItem[]>({
     queryKey: ["/api/navigation"],
@@ -143,7 +146,7 @@ export function Navigation({ className }: NavigationProps) {
               </div>
             </Link>
             
-            {isAuthenticated && (
+            {showLogoutButton && (
               <Button
                 variant="outline"
                 size="sm"
