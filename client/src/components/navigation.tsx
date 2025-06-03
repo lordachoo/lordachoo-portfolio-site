@@ -4,8 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTheme } from "@/components/theme-provider";
+import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
-import { Moon, Sun, Menu, X, Settings } from "lucide-react";
+import { Moon, Sun, Menu, X, Settings, LogOut } from "lucide-react";
 import type { NavigationItem, Profile } from "@shared/schema";
 
 interface NavigationProps {
@@ -15,6 +16,7 @@ interface NavigationProps {
 export function Navigation({ className }: NavigationProps) {
   const [location] = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { isAuthenticated, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { data: navigationItems = [] } = useQuery<NavigationItem[]>({
