@@ -26,7 +26,7 @@ export function generateSessionId(): string {
 // Middleware to check authentication
 export async function requireAuth(req: Request, res: Response, next: NextFunction) {
   try {
-    const sessionId = req.headers.authorization?.replace('Bearer ', '');
+    const sessionId = (req as any).cookies?.adminSessionId;
     
     if (!sessionId) {
       return res.status(401).json({ error: "No authentication token provided" });

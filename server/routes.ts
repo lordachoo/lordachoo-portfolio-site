@@ -31,8 +31,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const result = await loginAdmin(username, password);
+      
+      // Set session cookie
+      res.cookie('adminSessionId', result.session.id, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      });
+      
       res.json({ 
-        token: result.session.id,
+        success: true,
         user: result.user 
       });
     } catch (error) {
@@ -44,6 +53,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const sessionId = req.adminSession.id;
       await logoutAdmin(sessionId);
+      
+      // Clear the session cookie
+      res.clearCookie('adminSessionId');
+      
       res.json({ message: "Logged out successfully" });
     } catch (error) {
       res.status(500).json({ error: "Logout failed" });

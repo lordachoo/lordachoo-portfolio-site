@@ -6,28 +6,17 @@ export function useAuth() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem("adminToken");
-      if (!token) {
-        setIsAuthenticated(false);
-        setIsLoading(false);
-        return;
-      }
-
       try {
         const response = await fetch("/api/auth/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: 'include', // Include session cookies
         });
 
         if (response.ok) {
           setIsAuthenticated(true);
         } else {
-          localStorage.removeItem("adminToken");
           setIsAuthenticated(false);
         }
       } catch (error) {
-        localStorage.removeItem("adminToken");
         setIsAuthenticated(false);
       }
       
@@ -37,8 +26,16 @@ export function useAuth() {
     checkAuth();
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem("adminToken");
+  const logout = async () => {
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: 'include',
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+    
     setIsAuthenticated(false);
     window.location.href = "/";
   };
