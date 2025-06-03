@@ -112,7 +112,7 @@ export class DatabaseStorage implements IStorage {
 
   // Navigation
   async getNavigationItems(): Promise<NavigationItem[]> {
-    return await db.select().from(navigationItems).where(eq(navigationItems.isVisible, true)).orderBy(asc(navigationItems.order));
+    return await db.select().from(navigationItems).orderBy(asc(navigationItems.order));
   }
 
   async createNavigationItem(item: InsertNavigationItem): Promise<NavigationItem> {
