@@ -1,0 +1,227 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 222 84% 5%; /* #0D1117 */
+  --foreground: 210 40% 98%; /* #F0F6FC */
+  --muted: 215 14% 34%; /* #8B949E */
+  --muted-foreground: 217 11% 65%;
+  --popover: 224 71% 4%;
+  --popover-foreground: 210 40% 98%;
+  --card: 224 71% 4%;
+  --card-foreground: 210 40% 98%;
+  --border: 216 12% 24%; /* #30363D */
+  --input: 216 12% 24%;
+  --primary: 213 93% 68%; /* #58A6FF */
+  --primary-foreground: 222 84% 5%;
+  --secondary: 218 11% 65%;
+  --secondary-foreground: 222 84% 5%;
+  --accent: 262 83% 58%; /* #7C3AED */
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 212 92% 68%;
+  --radius: 0.5rem;
+}
+
+.light {
+  --background: 0 0% 100%; /* #FFFFFF */
+  --foreground: 224 71% 4%; /* #24292F */
+  --muted: 220 14% 96%; /* #F6F8FA */
+  --muted-foreground: 220 9% 46%; /* #656D76 */
+  --popover: 0 0% 100%;
+  --popover-foreground: 224 71% 4%;
+  --card: 0 0% 100%;
+  --card-foreground: 224 71% 4%;
+  --border: 220 13% 91%; /* #D0D7DE */
+  --input: 220 13% 91%;
+  --primary: 213 94% 43%; /* #0969DA */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 14% 96%;
+  --secondary-foreground: 220 9% 39%;
+  --accent: 262 83% 43%; /* #6F42C1 */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 213 94% 43%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl lg:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl lg:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl lg:text-3xl;
+  }
+
+  h4 {
+    @apply text-xl lg:text-2xl;
+  }
+
+  h5 {
+    @apply text-lg lg:text-xl;
+  }
+
+  h6 {
+    @apply text-base lg:text-lg;
+  }
+
+  p {
+    @apply leading-7;
+  }
+
+  /* Smooth transitions */
+  * {
+    @apply transition-colors duration-200;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted;
+  }
+
+  /* Sidebar hover effects */
+  .sidebar-item {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .sidebar-item:hover {
+    @apply transform translate-x-1;
+  }
+
+  /* Project card hover effects */
+  .project-card {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .project-card:hover {
+    @apply transform -translate-y-1 shadow-2xl;
+  }
+
+  /* Blog card hover effects */
+  .blog-card {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .blog-card:hover {
+    @apply transform -translate-y-0.5;
+  }
+
+  /* Focus styles */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+  }
+
+  /* Loading animations */
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Fade in animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  /* Code syntax highlighting */
+  pre {
+    @apply bg-muted p-4 rounded-lg overflow-x-auto;
+  }
+
+  code {
+    @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+  }
+
+  /* Rich text editor styles */
+  .prose {
+    @apply max-w-none;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    @apply text-foreground;
+  }
+
+  .prose p {
+    @apply text-muted-foreground;
+  }
+
+  .prose a {
+    @apply text-primary hover:underline;
+  }
+
+  .prose ul,
+  .prose ol {
+    @apply text-muted-foreground;
+  }
+
+  .prose blockquote {
+    @apply border-l-4 border-primary pl-4 italic;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .sidebar-mobile {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar-mobile.open {
+      transform: translateX(0);
+    }
+  }
+}
