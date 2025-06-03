@@ -85,7 +85,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/navigation", async (req, res) => {
     try {
       const items = await storage.getNavigationItems();
-      res.json(items);
+      // For admin requests, return all items regardless of visibility
+      // For public requests, filter to only visible items
+      const isAdminRequest = req.query.admin === 'true';
+      const filteredItems = isAdminRequest ? items : items.filter(item => item.isVisible);
+      res.json(filteredItems);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch navigation items" });
     }

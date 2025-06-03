@@ -102,7 +102,8 @@ export function NavigationEditor() {
   const [localItems, setLocalItems] = useState<NavigationItem[]>([]);
 
   const { data: navigationItems = [] } = useQuery<NavigationItem[]>({
-    queryKey: ["/api/navigation"],
+    queryKey: ["/api/navigation", "admin"],
+    queryFn: () => fetch("/api/navigation?admin=true", { credentials: "include" }).then(res => res.json()),
   });
 
   // Update local items when data changes
