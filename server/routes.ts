@@ -49,13 +49,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/auth/logout", requireAuth, async (req: any, res) => {
+  app.post("/api/auth/logout", async (req: any, res) => {
     try {
-      const sessionId = req.adminSession.id;
-      await logoutAdmin(sessionId);
+      const sessionId = req.cookies?.adminSessionId;
       
-      // Clear the session cookie
-      res.clearCookie('adminSessionId');
+      if (sessionId) {
+        await logoutAdmin(sessionId);
+      }
+      
+      // Always clear the session cookie
+      res.clearCookie('adminSessionId', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+      });
       
       res.json({ message: "Logged out successfully" });
     } catch (error) {

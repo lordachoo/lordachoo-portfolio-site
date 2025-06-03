@@ -29,10 +29,32 @@ import type { Profile } from "@shared/schema";
 
 export default function Admin() {
   const [activeTab, setActiveTab] = useState("content");
+  const { isAuthenticated, isLoading } = useAuth();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      window.location.href = "/login";
+    }
+  }, [isAuthenticated, isLoading]);
 
   const { data: profile } = useQuery<Profile>({
     queryKey: ["/api/profile"],
   });
+
+  // Show loading while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div>Loading...</div>
+      </div>
+    );
+  }
+
+  // Don't render admin content if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const systemStats = [
     {
