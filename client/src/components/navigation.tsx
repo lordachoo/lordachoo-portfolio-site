@@ -116,8 +116,42 @@ export function Navigation({ className }: NavigationProps) {
           {/* Navigation Menu */}
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigationItems.map((item) => {
-              const href = item.href.startsWith("#") ? item.href.replace("#", "/") : item.href;
+              const isExternal = item.href.startsWith('http') || item.href.startsWith('www');
+              const isHashLink = item.href.startsWith("#");
+              const href = isHashLink ? item.href.replace("#", "/") : item.href;
               const isActive = isActiveRoute(item.href);
+              
+              const handleClick = (e: React.MouseEvent) => {
+                if (isHashLink) {
+                  e.preventDefault();
+                  const targetId = item.href.substring(1);
+                  const element = document.getElementById(targetId);
+                  if (element) {
+                    element.scrollIntoView({ 
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                  }
+                }
+              };
+              
+              if (isExternal) {
+                return (
+                  <a
+                    key={item.id}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      "sidebar-item flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 cursor-pointer",
+                      "hover:bg-accent hover:text-accent-foreground text-muted-foreground"
+                    )}
+                  >
+                    <i className={`${item.icon} w-5 h-5`} />
+                    <span>{item.label}</span>
+                  </a>
+                );
+              }
               
               return (
                 <Link key={item.id} href={href === "/home" ? "/" : href}>
@@ -128,6 +162,7 @@ export function Navigation({ className }: NavigationProps) {
                         ? "bg-primary text-primary-foreground"
                         : "hover:bg-accent hover:text-accent-foreground text-muted-foreground"
                     )}
+                    onClick={handleClick}
                   >
                     <i className={`${item.icon} w-5 h-5`} />
                     <span>{item.label}</span>

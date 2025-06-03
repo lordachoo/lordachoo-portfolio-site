@@ -24,7 +24,7 @@ export function HeroSection() {
   ];
 
   return (
-    <section className="p-8 lg:p-12 min-h-screen flex items-center">
+    <section id="home" className="p-8 lg:p-12 min-h-[70vh] flex items-center">
       <div className="max-w-4xl mx-auto w-full">
         <div className="mb-8 animate-fade-in">
           <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
