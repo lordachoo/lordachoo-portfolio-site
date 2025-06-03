@@ -27,8 +27,9 @@ export function Navigation({ className }: NavigationProps) {
   });
 
   // Filter navigation items to only show visible ones for public users
-  // Admin users see all items
-  const visibleNavigationItems = isAuthenticated 
+  // Show all items (including hidden) only on admin page, otherwise filter by visibility
+  const isAdminPage = location.includes('/admin');
+  const visibleNavigationItems = isAdminPage 
     ? navigationItems 
     : navigationItems.filter(item => item.isVisible);
 
