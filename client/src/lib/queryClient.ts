@@ -11,13 +11,11 @@ export async function apiRequest(
   url: string,
   options: RequestInit = {}
 ): Promise<any> {
-  const token = localStorage.getItem("adminToken");
-  
   const response = await fetch(url, {
     ...options,
+    credentials: "include", // Include cookies for authentication
     headers: {
       "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
   });

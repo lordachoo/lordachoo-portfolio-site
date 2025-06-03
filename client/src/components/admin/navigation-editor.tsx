@@ -23,8 +23,11 @@ export function NavigationEditor() {
 
   const createItemMutation = useMutation({
     mutationFn: async (data: InsertNavigationItem) => {
-      const response = await apiRequest("POST", "/api/navigation", data);
-      return response.json();
+      console.log("Creating navigation item with data:", data);
+      return await apiRequest("/api/navigation", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/navigation"] });
@@ -35,12 +38,22 @@ export function NavigationEditor() {
         description: "The navigation item has been added successfully.",
       });
     },
+    onError: (error) => {
+      console.error("Failed to create navigation item:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create navigation item. Please try again.",
+        variant: "destructive",
+      });
+    },
   });
 
   const updateItemMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: Partial<InsertNavigationItem> }) => {
-      const response = await apiRequest("PUT", `/api/navigation/${id}`, data);
-      return response.json();
+      return await apiRequest(`/api/navigation/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/navigation"] });
@@ -56,7 +69,7 @@ export function NavigationEditor() {
 
   const deleteItemMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest("DELETE", `/api/navigation/${id}`);
+      return await apiRequest(`/api/navigation/${id}`, { method: "DELETE" });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/navigation"] });
@@ -69,6 +82,7 @@ export function NavigationEditor() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form submitted with formData:", formData);
     
     const data: InsertNavigationItem = {
       label: formData.label || "",
@@ -78,9 +92,13 @@ export function NavigationEditor() {
       isVisible: formData.isVisible ?? true,
     };
 
+    console.log("Prepared data for submission:", data);
+
     if (editingItem) {
+      console.log("Updating existing item:", editingItem.id);
       updateItemMutation.mutate({ id: editingItem.id, data });
     } else {
+      console.log("Creating new item");
       createItemMutation.mutate(data);
     }
   };
