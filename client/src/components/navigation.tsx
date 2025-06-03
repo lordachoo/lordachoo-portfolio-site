@@ -26,6 +26,12 @@ export function Navigation({ className }: NavigationProps) {
     queryKey: ["/api/navigation"],
   });
 
+  // Filter navigation items to only show visible ones for public users
+  // Admin users see all items
+  const visibleNavigationItems = isAuthenticated 
+    ? navigationItems 
+    : navigationItems.filter(item => item.isVisible);
+
   const { data: profile } = useQuery<Profile>({
     queryKey: ["/api/profile"],
   });
@@ -115,7 +121,7 @@ export function Navigation({ className }: NavigationProps) {
 
           {/* Navigation Menu */}
           <nav className="flex-1 px-4 py-6 space-y-2">
-            {navigationItems.map((item) => {
+            {visibleNavigationItems.map((item) => {
               const isExternal = item.href.startsWith('http') || item.href.startsWith('www');
               const isHashLink = item.href.startsWith("#");
               const href = isHashLink ? item.href.replace("#", "/") : item.href;
