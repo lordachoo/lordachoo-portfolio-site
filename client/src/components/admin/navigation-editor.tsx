@@ -106,11 +106,29 @@ export function NavigationEditor() {
   });
 
   // Update local items when data changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (navigationItems.length > 0) {
       setLocalItems([...navigationItems].sort((a, b) => a.order - b.order));
     }
   }, [navigationItems]);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      setLocalItems((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over?.id);
+
+        const newItems = arrayMove(items, oldIndex, newIndex);
+        
+        // Update the order in the database
+        reorderItemsMutation.mutate(newItems);
+        
+        return newItems;
+      });
+    }
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -353,45 +371,32 @@ export function NavigationEditor() {
       
       <CardContent>
         <div className="space-y-2">
-          {navigationItems.length === 0 ? (
+          {localItems.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">
               No navigation items found. Add some to get started.
             </p>
           ) : (
-            navigationItems.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50"
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={localItems.map(item => item.id)}
+                strategy={verticalListSortingStrategy}
               >
-                <div className="flex items-center space-x-3">
-                  <GripVertical className="h-4 w-4 text-muted-foreground cursor-move" />
-                  <i className={`${item.icon} w-4 h-4`} />
-                  <span className="font-medium">{item.label}</span>
-                  <span className="text-sm text-muted-foreground">→ {item.href}</span>
-                  {!item.isVisible && (
-                    <span className="text-xs bg-muted px-2 py-1 rounded">Hidden</span>
-                  )}
+                <div className="space-y-2">
+                  {localItems.map((item) => (
+                    <SortableNavigationItem
+                      key={item.id}
+                      item={item}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                    />
+                  ))}
                 </div>
-                
-                <div className="flex space-x-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleEdit(item)}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDelete(item.id)}
-                    className="text-destructive hover:text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ))
+              </SortableContext>
+            </DndContext>
           )}
         </div>
       </CardContent>
