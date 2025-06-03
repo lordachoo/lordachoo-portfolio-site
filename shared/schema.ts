@@ -198,6 +198,9 @@ export const insertProfileSchema = createInsertSchema(profile).omit({
 });
 
 // Types
+export type UpsertUser = typeof users.$inferInsert;
+export type User = typeof users.$inferSelect;
+
 export type NavigationItem = typeof navigationItems.$inferSelect;
 export type InsertNavigationItem = z.infer<typeof insertNavigationItemSchema>;
 

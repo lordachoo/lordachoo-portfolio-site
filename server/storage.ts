@@ -1,6 +1,6 @@
 import { 
   navigationItems, contentSections, blogPosts, experiences, education, 
-  skillCategories, skills, projects, profile,
+  skillCategories, skills, projects, profile, users,
   type NavigationItem, type InsertNavigationItem,
   type ContentSection, type InsertContentSection,
   type BlogPost, type InsertBlogPost,
@@ -9,12 +9,17 @@ import {
   type SkillCategory, type InsertSkillCategory,
   type Skill, type InsertSkill,
   type Project, type InsertProject,
-  type Profile, type InsertProfile
+  type Profile, type InsertProfile,
+  type User, type UpsertUser
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, asc } from "drizzle-orm";
 
 export interface IStorage {
+  // User operations (required for authentication)
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
+
   // Navigation
   getNavigationItems(): Promise<NavigationItem[]>;
   createNavigationItem(item: InsertNavigationItem): Promise<NavigationItem>;
@@ -69,6 +74,27 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  // User operations (required for authentication)
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return user;
+  }
+
   // Navigation
   async getNavigationItems(): Promise<NavigationItem[]> {
     return await db.select().from(navigationItems).where(eq(navigationItems.isVisible, true)).orderBy(asc(navigationItems.order));
