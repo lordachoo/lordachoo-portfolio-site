@@ -71,13 +71,15 @@ export function ResumeSection() {
                         </div>
                         
                         {exp.description && (
-                          <p className="text-muted-foreground mb-4">{exp.description}</p>
+                          <div className="text-muted-foreground mb-4 whitespace-pre-line">
+                            {exp.description}
+                          </div>
                         )}
                         
                         {exp.achievements && exp.achievements.length > 0 && (
                           <ul className="list-disc list-inside space-y-2 text-muted-foreground mb-4">
                             {exp.achievements.map((achievement, index) => (
-                              <li key={index}>{achievement}</li>
+                              <li key={index} className="whitespace-pre-line">{achievement}</li>
                             ))}
                           </ul>
                         )}
@@ -141,7 +143,7 @@ export function ResumeSection() {
                         )}
                         
                         {edu.description && (
-                          <p className="text-muted-foreground">{edu.description}</p>
+                          <div className="text-muted-foreground whitespace-pre-line">{edu.description}</div>
                         )}
                       </CardContent>
                     </Card>
