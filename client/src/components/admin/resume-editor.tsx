@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -214,6 +214,8 @@ export function ResumeEditor() {
     setIsDialogOpen(false);
     setEditingItem(null);
     setFormData({});
+    setAchievementsInput("");
+    setTechnologiesInput("");
   };
 
   const handleAddNew = (type: "experience" | "education" | "skill-category" | "skill") => {
@@ -255,8 +257,8 @@ export function ResumeEditor() {
         startDate: formData.startDate || "",
         endDate: formData.endDate || null,
         description: formData.description || "",
-        achievements: formData.achievements || [],
-        technologies: formData.technologies || [],
+        achievements: achievementsInput ? achievementsInput.split(",").map(item => item.trim()).filter(Boolean) : [],
+        technologies: technologiesInput ? technologiesInput.split(",").map(item => item.trim()).filter(Boolean) : [],
         order: formData.order || 0,
       };
 
@@ -309,10 +311,20 @@ export function ResumeEditor() {
     }
   };
 
-  const handleArrayFieldChange = (field: string, value: string) => {
-    const array = value.split(",").map(item => item.trim()).filter(Boolean);
-    setFormData({ ...formData, [field]: array });
-  };
+  // Store comma-separated fields as strings during editing
+  const [achievementsInput, setAchievementsInput] = useState("");
+  const [technologiesInput, setTechnologiesInput] = useState("");
+
+  // Update string inputs when editing an item
+  useEffect(() => {
+    if (editingItem && dialogType === "experience") {
+      setAchievementsInput(editingItem.achievements?.join(", ") || "");
+      setTechnologiesInput(editingItem.technologies?.join(", ") || "");
+    } else {
+      setAchievementsInput("");
+      setTechnologiesInput("");
+    }
+  }, [editingItem, dialogType]);
 
   return (
     <div className="space-y-6">
@@ -640,8 +652,8 @@ export function ResumeEditor() {
                   <Label htmlFor="achievements">Achievements (comma-separated)</Label>
                   <Textarea
                     id="achievements"
-                    value={formData.achievements?.join(", ") || ""}
-                    onChange={(e) => handleArrayFieldChange("achievements", e.target.value)}
+                    value={achievementsInput}
+                    onChange={(e) => setAchievementsInput(e.target.value)}
                     placeholder="Led team of 5 developers, Increased system performance by 40%"
                     rows={3}
                   />
@@ -651,8 +663,8 @@ export function ResumeEditor() {
                   <Label htmlFor="technologies">Technologies (comma-separated)</Label>
                   <Input
                     id="technologies"
-                    value={formData.technologies?.join(", ") || ""}
-                    onChange={(e) => handleArrayFieldChange("technologies", e.target.value)}
+                    value={technologiesInput}
+                    onChange={(e) => setTechnologiesInput(e.target.value)}
                     placeholder="React, Node.js, PostgreSQL, AWS"
                   />
                 </div>

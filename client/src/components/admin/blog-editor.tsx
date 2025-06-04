@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ export function BlogEditor() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [formData, setFormData] = useState<Partial<InsertBlogPost>>({});
+  const [tagsInput, setTagsInput] = useState("");
 
   const { data: blogPosts = [] } = useQuery<BlogPost[]>({
     queryKey: ["/api/blog"],
