@@ -93,7 +93,7 @@ export function BlogEditor() {
 
     const slug = formData.slug || generateSlug(formData.title);
     const readTime = calculateReadTime(formData.content);
-    const tags = formData.tags || [];
+    const tags = tagsInput ? tagsInput.split(",").map(tag => tag.trim()).filter(Boolean) : [];
 
     const data: InsertBlogPost = {
       title: formData.title,
@@ -122,9 +122,9 @@ export function BlogEditor() {
       excerpt: post.excerpt || "",
       content: post.content,
       category: post.category,
-      tags: post.tags || [],
       isPublished: post.isPublished,
     });
+    setTagsInput(post.tags?.join(", ") || "");
     setIsDialogOpen(true);
   };
 
@@ -137,11 +137,7 @@ export function BlogEditor() {
   const resetForm = () => {
     setFormData({});
     setEditingPost(null);
-  };
-
-  const handleTagsChange = (value: string) => {
-    const tags = value.split(",").map(tag => tag.trim()).filter(Boolean);
-    setFormData({ ...formData, tags });
+    setTagsInput("");
   };
 
   return (
@@ -222,8 +218,8 @@ export function BlogEditor() {
                   <Label htmlFor="tags">Tags (comma-separated)</Label>
                   <Input
                     id="tags"
-                    value={formData.tags?.join(", ") || ""}
-                    onChange={(e) => handleTagsChange(e.target.value)}
+                    value={tagsInput}
+                    onChange={(e) => setTagsInput(e.target.value)}
                     placeholder="react, javascript, tutorial"
                   />
                 </div>
