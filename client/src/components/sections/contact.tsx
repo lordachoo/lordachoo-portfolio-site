@@ -56,29 +56,15 @@ export function ContactSection() {
             <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>
             
             <div className="space-y-6">
-              {profile?.email && (
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-                    <Mail className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <div className="font-medium">Email</div>
-                    <div className="text-muted-foreground">{profile.email}</div>
-                  </div>
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
+                  <Mail className="h-6 w-6 text-primary" />
                 </div>
-              )}
-              
-              {profile?.phone && (
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-                    <Phone className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <div className="font-medium">Phone</div>
-                    <div className="text-muted-foreground">{profile.phone}</div>
-                  </div>
+                <div>
+                  <div className="font-medium">Get in Touch</div>
+                  <div className="text-muted-foreground">Use the contact form to reach me</div>
                 </div>
-              )}
+              </div>
               
               {profile?.location && (
                 <div className="flex items-center space-x-4">

@@ -32,7 +32,7 @@ export function ProfileEditor() {
   const [activeSection, setActiveSection] = useState<string>("basic");
 
   const { data: profile, isLoading } = useQuery({
-    queryKey: ["/api/profile"],
+    queryKey: ["/api/profile/private"],
   });
 
   const form = useForm<ProfileFormData>({
@@ -89,7 +89,7 @@ export function ProfileEditor() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/profile"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/profile/private"] });
       toast({
         title: "Profile updated",
         description: "Your profile has been updated successfully.",

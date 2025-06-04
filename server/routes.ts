@@ -530,8 +530,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Profile endpoints (public read access)
+  // Profile endpoints (public read access - sensitive data removed)
   app.get("/api/profile", async (req, res) => {
+    try {
+      const profile = await storage.getProfile();
+      if (!profile) {
+        res.status(404).json({ error: "Profile not found" });
+        return;
+      }
+      
+      // Remove sensitive information from public profile
+      const publicProfile = {
+        ...profile,
+        email: undefined,
+        phone: undefined,
+      };
+      
+      res.json(publicProfile);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch profile" });
+    }
+  });
+
+  // Private profile endpoint (requires authentication)
+  app.get("/api/profile/private", requireAuth, async (req, res) => {
     try {
       const profile = await storage.getProfile();
       if (!profile) {
