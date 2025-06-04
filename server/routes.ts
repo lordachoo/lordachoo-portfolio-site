@@ -6,7 +6,7 @@ import { z } from "zod";
 import { 
   insertNavigationItemSchema, insertContentSectionSchema, insertBlogPostSchema,
   insertExperienceSchema, insertEducationSchema, insertSkillCategorySchema,
-  insertSkillSchema, insertProjectSchema, insertProfileSchema
+  insertSkillSchema, insertProjectSchema, insertProfileSchema, insertContactMessageSchema
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -577,6 +577,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         res.status(500).json({ error: "Failed to update profile" });
       }
+    }
+  });
+
+  // Contact message routes
+  app.post("/api/contact", async (req, res) => {
+    try {
+      const contactData = insertContactMessageSchema.parse(req.body);
+      const message = await storage.createContactMessage(contactData);
+      res.status(201).json(message);
+    } catch (error) {
+      console.error("Error creating contact message:", error);
+      if (error.issues) {
+        return res.status(400).json({ message: "Invalid data", errors: error.issues });
+      }
+      res.status(500).json({ message: "Failed to send message" });
+    }
+  });
+
+  app.get("/api/contact/messages", requireAuth, async (req, res) => {
+    try {
+      const messages = await storage.getContactMessages();
+      res.json(messages);
+    } catch (error) {
+      console.error("Error fetching contact messages:", error);
+      res.status(500).json({ message: "Failed to fetch messages" });
+    }
+  });
+
+  app.put("/api/contact/messages/:id/read", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.markContactMessageRead(id);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error marking message as read:", error);
+      res.status(500).json({ message: "Failed to mark message as read" });
+    }
+  });
+
+  app.delete("/api/contact/messages/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteContactMessage(id);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting contact message:", error);
+      res.status(500).json({ message: "Failed to delete message" });
     }
   });
 

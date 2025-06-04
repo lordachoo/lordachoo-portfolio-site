@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import { Mail, Phone, MapPin, Github, Linkedin, Send } from "lucide-react";
-import type { Profile, ContentSection } from "@shared/schema";
+import type { Profile, ContentSection, InsertContactMessage } from "@shared/schema";
 
 export function ContactSection() {
   const { toast } = useToast();
