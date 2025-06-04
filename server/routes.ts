@@ -491,20 +491,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/education/api/projects", requireAuth, async (req, res) => {
-    try {
-      const data = insertProjectSchema.parse(req.body);
-      const project = await storage.createProject(data);
-      res.json(project);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ error: "Invalid data", details: error.errors });
-      } else {
-        res.status(500).json({ error: "Failed to create project" });
-      }
-    }
-  });
-
   app.post("/api/projects", requireAuth, async (req, res) => {
     try {
       const data = insertProjectSchema.parse(req.body);

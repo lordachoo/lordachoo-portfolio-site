@@ -26,8 +26,11 @@ export function BlogEditor() {
 
   const createPostMutation = useMutation({
     mutationFn: async (data: InsertBlogPost) => {
-      const response = await apiRequest("POST", "/api/blog", data);
-      return response.json();
+      return await apiRequest("/api/blog", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/blog"] });
@@ -42,8 +45,11 @@ export function BlogEditor() {
 
   const updatePostMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: Partial<InsertBlogPost> }) => {
-      const response = await apiRequest("PUT", `/api/blog/${id}`, data);
-      return response.json();
+      return await apiRequest(`/api/blog/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/blog"] });
@@ -59,7 +65,9 @@ export function BlogEditor() {
 
   const deletePostMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest("DELETE", `/api/blog/${id}`);
+      return await apiRequest(`/api/blog/${id}`, {
+        method: "DELETE",
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/blog"] });

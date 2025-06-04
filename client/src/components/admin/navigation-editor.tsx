@@ -143,6 +143,7 @@ export function NavigationEditor() {
       console.log("Creating navigation item with data:", data);
       return await apiRequest("/api/navigation", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
     },
@@ -170,6 +171,7 @@ export function NavigationEditor() {
     mutationFn: async ({ id, data }: { id: number; data: Partial<InsertNavigationItem> }) => {
       return await apiRequest(`/api/navigation/${id}`, {
         method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
     },
@@ -215,6 +217,7 @@ export function NavigationEditor() {
       const updates = items.map((item, index) => 
         apiRequest(`/api/navigation/${item.id}`, {
           method: "PUT",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ order: index })
         })
       );
