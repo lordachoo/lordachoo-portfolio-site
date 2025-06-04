@@ -63,17 +63,17 @@ export function ContactSection() {
   const socialLinks = profile?.socialLinks as Record<string, string> || {};
 
   return (
-    <section id="contact" className="p-8 lg:p-12">
+    <section id="contact" className="p-4 sm:p-6 lg:p-12">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Get In Touch</h2>
-          <p className="text-xl text-muted-foreground">
+        <div className="text-center mb-8 lg:mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Get In Touch</h2>
+          <p className="text-lg sm:text-xl text-muted-foreground">
             {contactContent?.content || 
              "Interested in collaborating on a project or discussing opportunities? I'm always open to connecting with fellow developers and exploring new challenges."}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
           {/* Contact Information */}
           <div>
             <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>

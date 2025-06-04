@@ -15,11 +15,11 @@ export function BlogSection() {
   const recentPosts = posts.slice(0, 3);
 
   return (
-    <section id="blog" className="p-8 lg:p-12 bg-card">
+    <section id="blog" className="p-4 sm:p-6 lg:p-12 bg-card">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Latest Blog Posts</h2>
-          <p className="text-xl text-muted-foreground">
+        <div className="text-center mb-8 lg:mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Latest Blog Posts</h2>
+          <p className="text-lg sm:text-xl text-muted-foreground">
             Thoughts on software development, technology trends, and lessons learned.
           </p>
         </div>

@@ -89,12 +89,12 @@ export default function Admin() {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="ml-60 md:ml-60 transition-all duration-300">
-        <div className="p-8 lg:p-12">
+      <main className="ml-0 lg:ml-60 transition-all duration-300">
+        <div className="p-4 sm:p-6 lg:p-12 pt-16 lg:pt-8">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 lg:mb-8 gap-4">
             <div>
-              <h1 className="text-3xl font-bold">Admin Panel</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold">Admin Panel</h1>
               <p className="text-muted-foreground mt-2">
                 Manage your portfolio content and settings
               </p>

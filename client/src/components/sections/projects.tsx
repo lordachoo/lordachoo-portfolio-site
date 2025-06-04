@@ -14,11 +14,11 @@ export function ProjectsSection() {
   const displayProjects = featuredProjects.length > 0 ? featuredProjects : projects.slice(0, 6);
 
   return (
-    <section id="projects" className="p-8 lg:p-12">
+    <section id="projects" className="p-4 sm:p-6 lg:p-12">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Featured Projects</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+        <div className="text-center mb-8 lg:mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Featured Projects</h2>
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
             A showcase of my recent work and open-source contributions. Each project demonstrates different aspects of my technical expertise.
           </p>
         </div>
