@@ -23,6 +23,32 @@ export function generateSessionId(): string {
   return crypto.randomUUID();
 }
 
+// Change admin password
+export async function changeAdminPassword(currentPassword: string, newPassword: string): Promise<boolean> {
+  try {
+    const adminUser = await storage.getAdminByUsername("admin");
+    if (!adminUser) {
+      throw new Error("Admin user not found");
+    }
+
+    // Verify current password
+    if (!verifyPassword(currentPassword, adminUser.passwordHash, adminUser.salt)) {
+      throw new Error("Invalid current password");
+    }
+
+    // Generate new salt and hash
+    const newSalt = generateSalt();
+    const newHash = hashPassword(newPassword, newSalt);
+
+    // Update admin user with new password
+    await storage.updateAdminPassword(adminUser.id, newHash, newSalt);
+    
+    return true;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // Middleware to check authentication
 export async function requireAuth(req: Request, res: Response, next: NextFunction) {
   try {

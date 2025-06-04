@@ -24,6 +24,7 @@ export interface IStorage {
   getAdminSession(sessionId: string): Promise<AdminSession | undefined>;
   deleteAdminSession(sessionId: string): Promise<void>;
   updateAdminLastLogin(userId: number): Promise<void>;
+  updateAdminPassword(userId: number, passwordHash: string, salt: string): Promise<void>;
 
   // Navigation
   getNavigationItems(): Promise<NavigationItem[]>;
@@ -108,6 +109,14 @@ export class DatabaseStorage implements IStorage {
     await db.update(adminUsers)
       .set({ lastLoginAt: new Date() })
       .where(eq(adminUsers.id, userId));
+  }
+
+  async updateAdminPassword(userId: number, passwordHash: string, salt: string): Promise<void> {
+    await db.update(adminUsers).set({ 
+      passwordHash, 
+      salt,
+      updatedAt: new Date()
+    }).where(eq(adminUsers.id, userId));
   }
 
   // Navigation
