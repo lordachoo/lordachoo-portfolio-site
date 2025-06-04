@@ -27,7 +27,8 @@ import {
   Briefcase,
   Code,
   User,
-  Settings
+  Settings,
+  Mail
 } from "lucide-react";
 import type { Profile } from "@shared/schema";
 
@@ -200,6 +201,10 @@ export default function Admin() {
 
             <TabsContent value="projects" className="space-y-6">
               <ProjectsEditor />
+            </TabsContent>
+
+            <TabsContent value="contact" className="space-y-6">
+              <ContactMessages />
             </TabsContent>
 
             <TabsContent value="settings" className="space-y-6">
