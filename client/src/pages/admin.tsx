@@ -137,7 +137,7 @@ export default function Admin() {
 
           {/* Admin Interface */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6 lg:grid-cols-6">
+            <TabsList className="grid w-full grid-cols-4 sm:grid-cols-6 lg:grid-cols-8">
               <TabsTrigger value="profile" className="flex items-center space-x-2">
                 <User className="h-4 w-4" />
                 <span className="hidden sm:inline">Profile</span>
