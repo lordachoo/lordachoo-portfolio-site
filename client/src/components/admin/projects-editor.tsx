@@ -34,8 +34,8 @@ export function ProjectsEditor() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      resetForm();
       setIsDialogOpen(false);
-      setFormData({});
       toast({
         title: "Project created",
         description: "The project has been created successfully.",
@@ -53,9 +53,8 @@ export function ProjectsEditor() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      resetForm();
       setIsDialogOpen(false);
-      setEditingProject(null);
-      setFormData({});
       toast({
         title: "Project updated",
         description: "The project has been updated successfully.",
@@ -141,8 +140,8 @@ export function ProjectsEditor() {
   };
 
   const handleTechnologiesChange = (value: string) => {
-    const technologies = value.split(",").map(tech => tech.trim()).filter(Boolean);
-    setFormData({ ...formData, technologies });
+    const technologies = value.split(",").map(tech => tech.trim()).filter(tech => tech.length > 0);
+    setFormData(prev => ({ ...prev, technologies }));
   };
 
   return (
@@ -150,7 +149,12 @@ export function ProjectsEditor() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Projects Editor</CardTitle>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog open={isDialogOpen} onOpenChange={(open) => {
+          setIsDialogOpen(open);
+          if (!open) {
+            resetForm();
+          }
+        }}>
             <DialogTrigger asChild>
               <Button onClick={resetForm}>
                 <Plus className="h-4 w-4 mr-2" />
@@ -224,7 +228,7 @@ export function ProjectsEditor() {
                   <Label htmlFor="technologies">Technologies (comma-separated)</Label>
                   <Input
                     id="technologies"
-                    value={formData.technologies?.join(", ") || ""}
+                    value={Array.isArray(formData.technologies) ? formData.technologies.join(", ") : ""}
                     onChange={(e) => handleTechnologiesChange(e.target.value)}
                     placeholder="React, Node.js, PostgreSQL, AWS"
                   />
