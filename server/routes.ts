@@ -487,7 +487,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/education/api/profile", requireAuth, async (req, res) => {
+  app.put("/api/profile", requireAuth, async (req, res) => {
     try {
       const data = insertProfileSchema.parse(req.body);
       const profile = await storage.upsertProfile(data);
