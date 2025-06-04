@@ -170,11 +170,6 @@ export function ContentEditor() {
               <Save className="h-4 w-4 mr-2" />
               {updateContentMutation.isPending ? "Saving..." : "Save Changes"}
             </Button>
-            
-            <Button type="button" variant="outline">
-              <Eye className="h-4 w-4 mr-2" />
-              Preview
-            </Button>
           </div>
         </form>
       </CardContent>

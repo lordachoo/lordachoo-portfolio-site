@@ -17,10 +17,60 @@ export function HeroSection() {
     queryKey: ["/api/content/about"],
   });
 
+  const { data: projects = [] } = useQuery({
+    queryKey: ["/api/projects"],
+  });
+
+  const { data: experiences = [] } = useQuery({
+    queryKey: ["/api/experience"],
+  });
+
+  const { data: skillCategories = [] } = useQuery({
+    queryKey: ["/api/skills"],
+  });
+
+  // Calculate dynamic stats from actual data
+  const calculateYearsExperience = () => {
+    if (experiences.length === 0) return "0";
+    
+    const sortedExperiences = experiences.sort((a: any, b: any) => {
+      const dateA = new Date(a.startDate + "-01");
+      const dateB = new Date(b.startDate + "-01");
+      return dateA.getTime() - dateB.getTime();
+    });
+    
+    const firstJob = sortedExperiences[0];
+    const startYear = new Date(firstJob.startDate + "-01").getFullYear();
+    const currentYear = new Date().getFullYear();
+    const years = currentYear - startYear;
+    
+    return years > 0 ? `${years}+` : "1";
+  };
+
+  const calculateTechnologiesCount = () => {
+    const allTech = new Set();
+    
+    // Add technologies from experiences
+    experiences.forEach((exp: any) => {
+      if (exp.technologies) {
+        exp.technologies.forEach((tech: string) => allTech.add(tech.toLowerCase()));
+      }
+    });
+    
+    // Add technologies from projects
+    projects.forEach((project: any) => {
+      if (project.technologies) {
+        project.technologies.forEach((tech: string) => allTech.add(tech.toLowerCase()));
+      }
+    });
+    
+    return allTech.size.toString();
+  };
+
   const stats = [
-    { value: "5+", label: "Years Experience" },
-    { value: "50+", label: "Projects Completed" },
-    { value: "15", label: "Technologies Mastered" },
+    { value: calculateYearsExperience(), label: "Years Experience" },
+    { value: projects.length.toString(), label: "Projects Completed" },
+    { value: calculateTechnologiesCount(), label: "Technologies Mastered" },
   ];
 
   return (
