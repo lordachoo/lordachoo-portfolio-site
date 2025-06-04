@@ -19,6 +19,7 @@ export function ProjectsEditor() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [formData, setFormData] = useState<Partial<InsertProject>>({});
+  const [technologiesInput, setTechnologiesInput] = useState("");
 
   const { data: projects = [] } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
@@ -89,10 +90,12 @@ export function ProjectsEditor() {
       return;
     }
 
+    const technologies = technologiesInput.split(",").map(tech => tech.trim()).filter(tech => tech.length > 0);
+    
     const data: InsertProject = {
       name: formData.name,
       description: formData.description,
-      technologies: formData.technologies || [],
+      technologies: technologies,
       githubUrl: formData.githubUrl || null,
       liveUrl: formData.liveUrl || null,
       imageUrl: formData.imageUrl || null,
@@ -125,6 +128,7 @@ export function ProjectsEditor() {
       language: project.language,
       order: project.order,
     });
+    setTechnologiesInput(Array.isArray(project.technologies) ? project.technologies.join(", ") : "");
     setIsDialogOpen(true);
   };
 
@@ -137,11 +141,7 @@ export function ProjectsEditor() {
   const resetForm = () => {
     setFormData({});
     setEditingProject(null);
-  };
-
-  const handleTechnologiesChange = (value: string) => {
-    const technologies = value.split(",").map(tech => tech.trim()).filter(tech => tech.length > 0);
-    setFormData(prev => ({ ...prev, technologies }));
+    setTechnologiesInput("");
   };
 
   return (
@@ -228,8 +228,8 @@ export function ProjectsEditor() {
                   <Label htmlFor="technologies">Technologies (comma-separated)</Label>
                   <Input
                     id="technologies"
-                    value={Array.isArray(formData.technologies) ? formData.technologies.join(", ") : ""}
-                    onChange={(e) => handleTechnologiesChange(e.target.value)}
+                    value={technologiesInput}
+                    onChange={(e) => setTechnologiesInput(e.target.value)}
                     placeholder="React, Node.js, PostgreSQL, AWS"
                   />
                 </div>
