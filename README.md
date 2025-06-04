@@ -15,6 +15,9 @@ A full-stack personal portfolio website for software engineers featuring secure 
 - **External Links**: Navigation supports external URLs that open in new tabs
 
 ### Admin Panel
+
+[!Admin Panel](./screenshots/portfolio-site-admin-panel.png)
+
 - **Secure Authentication**: Cookie-based session authentication (admin/admin123)
 - **Content Management**: Full CRUD operations for all website content
 - **Navigation Editor**: Drag-and-drop reordering with visibility controls
