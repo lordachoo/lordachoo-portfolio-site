@@ -12,6 +12,7 @@ import { ResumeEditor } from "@/components/admin/resume-editor";
 import { ProjectsEditor } from "@/components/admin/projects-editor";
 import { ProfileEditor } from "@/components/admin/profile-editor";
 import { AdminSettings } from "@/components/admin/admin-settings";
+import { ContactMessages } from "@/components/admin/contact-messages";
 import { useAuth } from "@/hooks/useAuth";
 import { 
   Database, 
@@ -164,6 +165,11 @@ export default function Admin() {
               <TabsTrigger value="projects" className="flex items-center space-x-2">
                 <Code className="h-4 w-4" />
                 <span className="hidden sm:inline">Projects</span>
+              </TabsTrigger>
+              
+              <TabsTrigger value="contact" className="flex items-center space-x-2">
+                <Mail className="h-4 w-4" />
+                <span className="hidden sm:inline">Messages</span>
               </TabsTrigger>
               
               <TabsTrigger value="settings" className="flex items-center space-x-2">

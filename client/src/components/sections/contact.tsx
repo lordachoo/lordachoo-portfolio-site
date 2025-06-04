@@ -12,7 +12,7 @@ import type { Profile, ContentSection, InsertContactMessage } from "@shared/sche
 
 export function ContactSection() {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formRef, setFormRef] = useState<HTMLFormElement | null>(null);
 
   const { data: profile } = useQuery<Profile>({
     queryKey: ["/api/profile"],
@@ -22,20 +22,42 @@ export function ContactSection() {
     queryKey: ["/api/content/contact"],
   });
 
+  const contactMutation = useMutation({
+    mutationFn: async (data: InsertContactMessage) => {
+      return await apiRequest("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Message sent!",
+        description: "Thank you for your message. I'll get back to you soon.",
+      });
+      formRef?.reset();
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    
+    const formData = new FormData(e.currentTarget);
+    const data: InsertContactMessage = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      subject: formData.get("subject") as string,
+      message: formData.get("message") as string,
+    };
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    toast({
-      title: "Message sent!",
-      description: "Thank you for your message. I'll get back to you soon.",
-    });
-
-    setIsSubmitting(false);
-    (e.target as HTMLFormElement).reset();
+    contactMutation.mutate(data);
   };
 
   const socialLinks = profile?.socialLinks as Record<string, string> || {};
@@ -127,7 +149,7 @@ export function ContactSection() {
               <CardTitle>Send Message</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form ref={setFormRef} onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="name">Name</Label>
@@ -159,9 +181,9 @@ export function ContactSection() {
                 <Button 
                   type="submit" 
                   className="w-full" 
-                  disabled={isSubmitting}
+                  disabled={contactMutation.isPending}
                 >
-                  {isSubmitting ? (
+                  {contactMutation.isPending ? (
                     "Sending..."
                   ) : (
                     <>
