@@ -1,6 +1,6 @@
 import { 
   navigationItems, contentSections, blogPosts, experiences, education, 
-  skillCategories, skills, projects, profile, adminUsers, adminSessions,
+  skillCategories, skills, projects, profile, adminUsers, adminSessions, contactMessages,
   type NavigationItem, type InsertNavigationItem,
   type ContentSection, type InsertContentSection,
   type BlogPost, type InsertBlogPost,
@@ -11,7 +11,8 @@ import {
   type Project, type InsertProject,
   type Profile, type InsertProfile,
   type AdminUser, type InsertAdminUser,
-  type AdminSession, type InsertAdminSession
+  type AdminSession, type InsertAdminSession,
+  type ContactMessage, type InsertContactMessage
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, asc } from "drizzle-orm";
@@ -77,6 +78,12 @@ export interface IStorage {
   // Profile
   getProfile(): Promise<Profile | undefined>;
   upsertProfile(profileData: InsertProfile): Promise<Profile>;
+
+  // Contact messages
+  getContactMessages(): Promise<ContactMessage[]>;
+  createContactMessage(message: InsertContactMessage): Promise<ContactMessage>;
+  markContactMessageRead(id: number): Promise<void>;
+  deleteContactMessage(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -331,6 +338,32 @@ export class DatabaseStorage implements IStorage {
       const [created] = await db.insert(profile).values(profileData).returning();
       return created;
     }
+  }
+
+  // Contact messages
+  async getContactMessages(): Promise<ContactMessage[]> {
+    return await db.select().from(contactMessages).orderBy(desc(contactMessages.createdAt));
+  }
+
+  async createContactMessage(messageData: InsertContactMessage): Promise<ContactMessage> {
+    const [message] = await db
+      .insert(contactMessages)
+      .values(messageData)
+      .returning();
+    return message;
+  }
+
+  async markContactMessageRead(id: number): Promise<void> {
+    await db
+      .update(contactMessages)
+      .set({ isRead: true })
+      .where(eq(contactMessages.id, id));
+  }
+
+  async deleteContactMessage(id: number): Promise<void> {
+    await db
+      .delete(contactMessages)
+      .where(eq(contactMessages.id, id));
   }
 }
 
