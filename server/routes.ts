@@ -272,7 +272,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/education/api/blog", requireAuth, requireAuth, async (req, res) => {
+  app.post("/api/blog", requireAuth, async (req, res) => {
     try {
       const data = insertBlogPostSchema.parse(req.body);
       const post = await storage.createBlogPost(data);
@@ -286,7 +286,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/education/api/blog/:id", requireAuth, requireAuth, async (req, res) => {
+  app.put("/api/blog/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const data = insertBlogPostSchema.partial().parse(req.body);
@@ -301,7 +301,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/education/api/blog/:id", requireAuth, requireAuth, async (req, res) => {
+  app.delete("/api/blog/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       await storage.deleteBlogPost(id);
@@ -321,7 +321,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/education/api/experience", requireAuth, requireAuth, async (req, res) => {
+  app.post("/api/experience", requireAuth, async (req, res) => {
     try {
       const data = insertExperienceSchema.parse(req.body);
       const experience = await storage.createExperience(data);
@@ -335,7 +335,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/education/api/experience/:id", requireAuth, requireAuth, async (req, res) => {
+  app.put("/api/experience/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const data = insertExperienceSchema.partial().parse(req.body);
@@ -350,7 +350,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/education/api/experience/:id", requireAuth, requireAuth, async (req, res) => {
+  app.delete("/api/experience/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       await storage.deleteExperience(id);
@@ -370,7 +370,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/education/api/education", requireAuth, async (req, res) => {
+  app.post("/api/education", requireAuth, async (req, res) => {
     try {
       const data = insertEducationSchema.parse(req.body);
       const education = await storage.createEducation(data);
@@ -384,7 +384,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/education/api/education/:id", requireAuth, async (req, res) => {
+  app.put("/api/education/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const data = insertEducationSchema.partial().parse(req.body);
@@ -399,7 +399,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/education/api/education/:id", requireAuth, async (req, res) => {
+  app.delete("/api/education/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       await storage.deleteEducation(id);
