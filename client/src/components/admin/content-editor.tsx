@@ -33,8 +33,11 @@ export function ContentEditor() {
 
   const updateContentMutation = useMutation({
     mutationFn: async (data: InsertContentSection) => {
-      const response = await apiRequest("PUT", `/api/content/${selectedSection}`, data);
-      return response.json();
+      return await apiRequest(`/api/content/${selectedSection}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/content", selectedSection] });
@@ -43,7 +46,8 @@ export function ContentEditor() {
         description: "Your changes have been saved successfully.",
       });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Content update error:", error);
       toast({
         title: "Error",
         description: "Failed to update content. Please try again.",

@@ -213,23 +213,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/education/api/content/:sectionKey", requireAuth, requireAuth, async (req, res) => {
-    try {
-      const data = insertContentSectionSchema.parse({
-        ...req.body,
-        sectionKey: req.params.sectionKey,
-      });
-      const section = await storage.upsertContentSection(data);
-      res.json(section);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ error: "Invalid data", details: error.errors });
-      } else {
-        res.status(500).json({ error: "Failed to update content section" });
-      }
-    }
-  });
-
   app.put("/api/content/:sectionKey", requireAuth, async (req, res) => {
     try {
       const data = insertContentSectionSchema.parse({
