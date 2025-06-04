@@ -7,7 +7,7 @@ import { formatDateRange } from "@/lib/utils";
 import type { Experience, Education, SkillCategory, Skill } from "@shared/schema";
 
 export function ResumeSection() {
-  const { data: experiences = [] } = useQuery<Experience[]>({
+  const { data: experiencesData = [] } = useQuery<Experience[]>({
     queryKey: ["/api/experience"],
   });
 
@@ -17,6 +17,13 @@ export function ResumeSection() {
 
   const { data: skillCategories = [] } = useQuery<(SkillCategory & { skills: Skill[] })[]>({
     queryKey: ["/api/skills"],
+  });
+
+  // Sort experiences by start date descending (most recent first)
+  const experiences = [...experiencesData].sort((a, b) => {
+    const dateA = new Date(a.startDate + "-01");
+    const dateB = new Date(b.startDate + "-01");
+    return dateB.getTime() - dateA.getTime();
   });
 
   return (
