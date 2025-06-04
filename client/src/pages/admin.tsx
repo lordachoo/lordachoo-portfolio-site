@@ -10,6 +10,7 @@ import { NavigationEditor } from "@/components/admin/navigation-editor";
 import { BlogEditor } from "@/components/admin/blog-editor";
 import { ResumeEditor } from "@/components/admin/resume-editor";
 import { ProjectsEditor } from "@/components/admin/projects-editor";
+import { ProfileEditor } from "@/components/admin/profile-editor";
 import { useAuth } from "@/hooks/useAuth";
 import { 
   Database, 
@@ -28,7 +29,7 @@ import {
 import type { Profile } from "@shared/schema";
 
 export default function Admin() {
-  const [activeTab, setActiveTab] = useState("content");
+  const [activeTab, setActiveTab] = useState("profile");
   const { isAuthenticated, isLoading } = useAuth();
 
   // Redirect to login if not authenticated
@@ -132,7 +133,12 @@ export default function Admin() {
 
           {/* Admin Interface */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5 lg:grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6 lg:grid-cols-6">
+              <TabsTrigger value="profile" className="flex items-center space-x-2">
+                <User className="h-4 w-4" />
+                <span className="hidden sm:inline">Profile</span>
+              </TabsTrigger>
+              
               <TabsTrigger value="content" className="flex items-center space-x-2">
                 <FileText className="h-4 w-4" />
                 <span className="hidden sm:inline">Content</span>
@@ -158,6 +164,10 @@ export default function Admin() {
                 <span className="hidden sm:inline">Projects</span>
               </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="profile" className="space-y-6">
+              <ProfileEditor />
+            </TabsContent>
 
             <TabsContent value="content" className="space-y-6">
               <ContentEditor />
