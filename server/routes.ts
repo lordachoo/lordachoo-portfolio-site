@@ -522,7 +522,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/education/api/projects/:id", requireAuth, async (req, res) => {
+  app.post("/api/projects", requireAuth, async (req, res) => {
+    try {
+      const data = insertProjectSchema.parse(req.body);
+      const project = await storage.createProject(data);
+      res.json(project);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ error: "Invalid data", details: error.errors });
+      } else {
+        res.status(500).json({ error: "Failed to create project" });
+      }
+    }
+  });
+
+  app.put("/api/projects/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const data = insertProjectSchema.partial().parse(req.body);
@@ -537,7 +551,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/education/api/projects/:id", requireAuth, async (req, res) => {
+  app.delete("/api/projects/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       await storage.deleteProject(id);
