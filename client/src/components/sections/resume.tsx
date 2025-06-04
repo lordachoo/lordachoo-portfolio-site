@@ -54,9 +54,9 @@ export function ResumeSection() {
                   experiences.map((exp) => (
                     <Card key={exp.id} className="hover:shadow-lg transition-shadow">
                       <CardContent className="p-6">
-                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-3">
-                          <h4 className="text-xl font-semibold">{exp.title}</h4>
-                          <Badge variant="secondary">
+                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-3 gap-2">
+                          <h4 className="text-lg sm:text-xl font-semibold">{exp.title}</h4>
+                          <Badge variant="secondary" className="self-start lg:self-auto text-xs sm:text-sm whitespace-nowrap">
                             {formatDateRange(exp.startDate, exp.endDate)}
                           </Badge>
                         </div>
@@ -120,9 +120,9 @@ export function ResumeSection() {
                   education.map((edu) => (
                     <Card key={edu.id} className="hover:shadow-lg transition-shadow">
                       <CardContent className="p-6">
-                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-3">
-                          <h4 className="text-xl font-semibold">{edu.degree}</h4>
-                          <Badge variant="secondary">
+                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-3 gap-2">
+                          <h4 className="text-lg sm:text-xl font-semibold">{edu.degree}</h4>
+                          <Badge variant="secondary" className="self-start lg:self-auto text-xs sm:text-sm whitespace-nowrap">
                             {formatDateRange(edu.startYear, edu.endYear)}
                           </Badge>
                         </div>

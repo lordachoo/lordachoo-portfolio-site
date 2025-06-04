@@ -105,7 +105,7 @@ A full-stack personal portfolio website for software engineers featuring secure 
 
 1. **Clone the repository**
 ```bash
-git clone <repository-url>
+git clone https://github.com/lordachoo/lordachoo-portfolio-site
 cd portfolio-website
 ```
 
