@@ -114,8 +114,7 @@ export class DatabaseStorage implements IStorage {
   async updateAdminPassword(userId: number, passwordHash: string, salt: string): Promise<void> {
     await db.update(adminUsers).set({ 
       passwordHash, 
-      salt,
-      updatedAt: new Date()
+      salt
     }).where(eq(adminUsers.id, userId));
   }
 

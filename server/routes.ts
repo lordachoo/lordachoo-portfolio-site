@@ -80,6 +80,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.put('/api/admin/change-password', requireAuth, async (req, res) => {
+    try {
+      const { currentPassword, newPassword } = req.body;
+
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({ error: "Current password and new password are required" });
+      }
+
+      if (newPassword.length < 8) {
+        return res.status(400).json({ error: "New password must be at least 8 characters long" });
+      }
+
+      await changeAdminPassword(currentPassword, newPassword);
+      res.json({ message: "Password changed successfully" });
+    } catch (error: any) {
+      if (error.message === "Invalid current password") {
+        res.status(400).json({ error: "Invalid current password" });
+      } else {
+        console.error("Change password error:", error);
+        res.status(500).json({ error: "Failed to change password" });
+      }
+    }
+  });
+
   // Public endpoints (no authentication required)
   // Navigation endpoints
   app.get("/api/navigation", async (req, res) => {

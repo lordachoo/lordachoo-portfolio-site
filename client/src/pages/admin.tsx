@@ -11,6 +11,7 @@ import { BlogEditor } from "@/components/admin/blog-editor";
 import { ResumeEditor } from "@/components/admin/resume-editor";
 import { ProjectsEditor } from "@/components/admin/projects-editor";
 import { ProfileEditor } from "@/components/admin/profile-editor";
+import { AdminSettings } from "@/components/admin/admin-settings";
 import { useAuth } from "@/hooks/useAuth";
 import { 
   Database, 
@@ -24,7 +25,8 @@ import {
   Shield,
   Briefcase,
   Code,
-  User
+  User,
+  Settings
 } from "lucide-react";
 import type { Profile } from "@shared/schema";
 
@@ -163,6 +165,11 @@ export default function Admin() {
                 <Code className="h-4 w-4" />
                 <span className="hidden sm:inline">Projects</span>
               </TabsTrigger>
+              
+              <TabsTrigger value="settings" className="flex items-center space-x-2">
+                <Settings className="h-4 w-4" />
+                <span className="hidden sm:inline">Settings</span>
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="profile" className="space-y-6">
@@ -187,6 +194,10 @@ export default function Admin() {
 
             <TabsContent value="projects" className="space-y-6">
               <ProjectsEditor />
+            </TabsContent>
+
+            <TabsContent value="settings" className="space-y-6">
+              <AdminSettings />
             </TabsContent>
           </Tabs>
 
