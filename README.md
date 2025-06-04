@@ -11,7 +11,7 @@ A full-stack personal portfolio website for software engineers featuring secure 
 - **Resume Section**: Dynamic experience, education, and skills display
 - **Projects Showcase**: Featured projects with GitHub integration support
 - **Blog Section**: Clean blog post display with read time estimates
-- **Contact Section**: Professional contact information display
+- **Contact Form**: PostgreSQL-stored contact messages with admin management
 - **External Links**: Navigation supports external URLs that open in new tabs
 
 ### Admin Panel
@@ -19,6 +19,8 @@ A full-stack personal portfolio website for software engineers featuring secure 
 - **Content Management**: Full CRUD operations for all website content
 - **Navigation Editor**: Drag-and-drop reordering with visibility controls
 - **Dynamic Content**: Edit hero section, blog posts, projects, resume data
+- **Contact Messages**: View, manage, and respond to contact form submissions
+- **Password Management**: Secure admin password changing functionality
 - **Real-time Updates**: Changes reflect immediately on public site
 - **Role-based Access**: Protected admin routes with proper authorization
 
@@ -90,6 +92,7 @@ A full-stack personal portfolio website for software engineers featuring secure 
 - **skill_categories**: Skill organization
 - **skills**: Individual skills with proficiency levels
 - **profile**: Global profile settings
+- **contact_messages**: Contact form submissions with read status
 
 ## Installation & Setup
 
@@ -372,12 +375,17 @@ npm run db:studio
 - `GET /api/experience` - Get work experience
 - `GET /api/education` - Get education history
 - `GET /api/skills` - Get skills with categories
+- `POST /api/contact` - Submit contact form message
 
 ### Admin Content (Protected)
 - `GET /api/navigation?admin=true` - Get all navigation items (including hidden)
 - `POST /api/navigation` - Create navigation item
 - `PUT /api/navigation/:id` - Update navigation item
 - `DELETE /api/navigation/:id` - Delete navigation item
+- `GET /api/contact/messages` - Get all contact messages
+- `PUT /api/contact/messages/:id/read` - Mark message as read
+- `DELETE /api/contact/messages/:id` - Delete contact message
+- `POST /api/auth/change-password` - Change admin password
 - Similar CRUD endpoints for all content types
 
 ## Security Features
