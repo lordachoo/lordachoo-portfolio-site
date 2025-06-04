@@ -395,7 +395,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/education/api/skills/categories", requireAuth, async (req, res) => {
+  app.post("/api/skills/categories", requireAuth, async (req, res) => {
     try {
       const data = insertSkillCategorySchema.parse(req.body);
       const category = await storage.createSkillCategory(data);
@@ -409,7 +409,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/education/api/skills", requireAuth, async (req, res) => {
+  app.put("/api/skills/categories/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const data = insertSkillCategorySchema.partial().parse(req.body);
+      const category = await storage.updateSkillCategory(id, data);
+      res.json(category);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ error: "Invalid data", details: error.errors });
+      } else {
+        res.status(500).json({ error: "Failed to update skill category" });
+      }
+    }
+  });
+
+  app.delete("/api/skills/categories/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteSkillCategory(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete skill category" });
+    }
+  });
+
+  app.post("/api/skills", requireAuth, async (req, res) => {
     try {
       const data = insertSkillSchema.parse(req.body);
       const skill = await storage.createSkill(data);
@@ -420,6 +445,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         res.status(500).json({ error: "Failed to create skill" });
       }
+    }
+  });
+
+  app.put("/api/skills/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const data = insertSkillSchema.partial().parse(req.body);
+      const skill = await storage.updateSkill(id, data);
+      res.json(skill);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ error: "Invalid data", details: error.errors });
+      } else {
+        res.status(500).json({ error: "Failed to update skill" });
+      }
+    }
+  });
+
+  app.delete("/api/skills/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteSkill(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete skill" });
     }
   });
 
