@@ -74,14 +74,14 @@ export function HeroSection() {
   ];
 
   return (
-    <section id="home" className="p-8 lg:p-12 min-h-[70vh] flex items-center">
+    <section id="home" className="p-4 sm:p-6 lg:p-12 min-h-[70vh] flex items-center pt-16 lg:pt-8">
       <div className="max-w-4xl mx-auto w-full">
         <div className="mb-8 animate-fade-in">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
             {heroContent?.title || "Building the Future with Code"}
           </h1>
           
-          <p className="text-xl text-muted-foreground mb-6 leading-relaxed">
+          <p className="text-lg sm:text-xl text-muted-foreground mb-6 leading-relaxed">
             {heroContent?.subtitle || aboutContent?.content || 
              "Passionate software engineer specializing in full-stack development, cloud architecture, and scalable systems. Turning complex problems into elegant solutions."}
           </p>

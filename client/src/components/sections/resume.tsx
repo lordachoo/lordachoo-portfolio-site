@@ -27,11 +27,11 @@ export function ResumeSection() {
   });
 
   return (
-    <section id="resume" className="p-8 lg:p-12 bg-card">
+    <section id="resume" className="p-4 sm:p-6 lg:p-12 bg-card">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold mb-8">Resume</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold mb-8">Resume</h2>
         
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Experience & Education Column */}
           <div className="lg:col-span-2 space-y-12">
             {/* Experience */}

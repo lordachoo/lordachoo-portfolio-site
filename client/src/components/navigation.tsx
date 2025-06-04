@@ -52,7 +52,7 @@ export function Navigation({ className }: NavigationProps) {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed top-4 left-4 z-50 md:hidden"
+        className="fixed top-4 left-4 z-50 lg:hidden"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
       >
         {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -61,7 +61,7 @@ export function Navigation({ className }: NavigationProps) {
       {/* Mobile overlay */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
@@ -70,7 +70,7 @@ export function Navigation({ className }: NavigationProps) {
       <aside
         className={cn(
           "fixed left-0 top-0 h-full w-60 bg-card border-r border-border z-40 transition-transform duration-300 ease-in-out overflow-y-auto",
-          mobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
+          mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
           className
         )}
       >

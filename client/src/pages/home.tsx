@@ -10,7 +10,7 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="ml-60 md:ml-60 transition-all duration-300">
+      <main className="ml-0 lg:ml-60 transition-all duration-300">
         <HeroSection />
         <ResumeSection />
         <ProjectsSection />
