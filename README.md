@@ -16,7 +16,7 @@ A full-stack personal portfolio website for software engineers featuring secure 
 
 ### Admin Panel
 
-[!Admin Panel](./screenshots/portfolio-site-admin-panel.png)
+![Admin Panel](screenshots/portfolio-site-admin-panel.png)
 
 - **Secure Authentication**: Cookie-based session authentication (admin/admin123)
 - **Content Management**: Full CRUD operations for all website content
