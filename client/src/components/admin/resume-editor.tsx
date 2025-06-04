@@ -49,8 +49,11 @@ export function ResumeEditor() {
   // Experience mutations
   const createExperienceMutation = useMutation({
     mutationFn: async (data: InsertExperience) => {
-      const response = await apiRequest("POST", "/api/experience", data);
-      return response.json();
+      return await apiRequest("/api/experience", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/experience"] });
@@ -61,8 +64,11 @@ export function ResumeEditor() {
 
   const updateExperienceMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: Partial<InsertExperience> }) => {
-      const response = await apiRequest("PUT", `/api/experience/${id}`, data);
-      return response.json();
+      return await apiRequest(`/api/experience/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/experience"] });
@@ -73,7 +79,7 @@ export function ResumeEditor() {
 
   const deleteExperienceMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest("DELETE", `/api/experience/${id}`);
+      return await apiRequest(`/api/experience/${id}`, { method: "DELETE" });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/experience"] });
@@ -84,8 +90,11 @@ export function ResumeEditor() {
   // Education mutations
   const createEducationMutation = useMutation({
     mutationFn: async (data: InsertEducation) => {
-      const response = await apiRequest("POST", "/api/education", data);
-      return response.json();
+      return await apiRequest("/api/education", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/education"] });
@@ -96,8 +105,11 @@ export function ResumeEditor() {
 
   const updateEducationMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: Partial<InsertEducation> }) => {
-      const response = await apiRequest("PUT", `/api/education/${id}`, data);
-      return response.json();
+      return await apiRequest(`/api/education/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/education"] });
@@ -108,7 +120,7 @@ export function ResumeEditor() {
 
   const deleteEducationMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest("DELETE", `/api/education/${id}`);
+      return await apiRequest(`/api/education/${id}`, { method: "DELETE" });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/education"] });
@@ -119,8 +131,11 @@ export function ResumeEditor() {
   // Skill mutations
   const createSkillCategoryMutation = useMutation({
     mutationFn: async (data: InsertSkillCategory) => {
-      const response = await apiRequest("POST", "/api/skills/categories", data);
-      return response.json();
+      return await apiRequest("/api/skills/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/skills"] });
@@ -131,13 +146,66 @@ export function ResumeEditor() {
 
   const createSkillMutation = useMutation({
     mutationFn: async (data: InsertSkill) => {
-      const response = await apiRequest("POST", "/api/skills", data);
-      return response.json();
+      return await apiRequest("/api/skills", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/skills"] });
       handleDialogClose();
       toast({ title: "Skill added successfully" });
+    },
+  });
+
+  const updateSkillCategoryMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: number; data: Partial<InsertSkillCategory> }) => {
+      return await apiRequest(`/api/skills/categories/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/skills"] });
+      handleDialogClose();
+      toast({ title: "Skill category updated successfully" });
+    },
+  });
+
+  const updateSkillMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: number; data: Partial<InsertSkill> }) => {
+      return await apiRequest(`/api/skills/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/skills"] });
+      handleDialogClose();
+      toast({ title: "Skill updated successfully" });
+    },
+  });
+
+  const deleteSkillCategoryMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return await apiRequest(`/api/skills/categories/${id}`, { method: "DELETE" });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/skills"] });
+      toast({ title: "Skill category deleted successfully" });
+    },
+  });
+
+  const deleteSkillMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return await apiRequest(`/api/skills/${id}`, { method: "DELETE" });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/skills"] });
+      toast({ title: "Skill deleted successfully" });
     },
   });
 
@@ -155,19 +223,23 @@ export function ResumeEditor() {
     setIsDialogOpen(true);
   };
 
-  const handleEdit = (item: any, type: "experience" | "education") => {
+  const handleEdit = (item: any, type: "experience" | "education" | "skill-category" | "skill") => {
     setDialogType(type);
     setEditingItem(item);
     setFormData(item);
     setIsDialogOpen(true);
   };
 
-  const handleDelete = (id: number, type: "experience" | "education") => {
+  const handleDelete = (id: number, type: "experience" | "education" | "skill-category" | "skill") => {
     if (window.confirm(`Are you sure you want to delete this ${type}?`)) {
       if (type === "experience") {
         deleteExperienceMutation.mutate(id);
-      } else {
+      } else if (type === "education") {
         deleteEducationMutation.mutate(id);
+      } else if (type === "skill-category") {
+        deleteSkillCategoryMutation.mutate(id);
+      } else if (type === "skill") {
+        deleteSkillMutation.mutate(id);
       }
     }
   };
@@ -215,7 +287,12 @@ export function ResumeEditor() {
         name: formData.name || "",
         order: formData.order || 0,
       };
-      createSkillCategoryMutation.mutate(data);
+      
+      if (editingItem) {
+        updateSkillCategoryMutation.mutate({ id: editingItem.id, data });
+      } else {
+        createSkillCategoryMutation.mutate(data);
+      }
     } else if (dialogType === "skill") {
       const data: InsertSkill = {
         categoryId: formData.categoryId,
@@ -223,7 +300,12 @@ export function ResumeEditor() {
         level: formData.level || 50,
         order: formData.order || 0,
       };
-      createSkillMutation.mutate(data);
+      
+      if (editingItem) {
+        updateSkillMutation.mutate({ id: editingItem.id, data });
+      } else {
+        createSkillMutation.mutate(data);
+      }
     }
   };
 
@@ -406,7 +488,25 @@ export function ResumeEditor() {
                   skillCategories.map((category) => (
                     <Card key={category.id}>
                       <CardHeader>
-                        <CardTitle className="text-lg">{category.name}</CardTitle>
+                        <div className="flex justify-between items-center">
+                          <CardTitle className="text-lg">{category.name}</CardTitle>
+                          <div className="flex space-x-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEdit(category, "skill-category")}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete(category.id, "skill-category")}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
                       </CardHeader>
                       <CardContent>
                         {category.skills.length === 0 ? (
@@ -417,11 +517,27 @@ export function ResumeEditor() {
                           <div className="space-y-3">
                             {category.skills.map((skill) => (
                               <div key={skill.id}>
-                                <div className="flex justify-between mb-1">
+                                <div className="flex justify-between items-center mb-1">
                                   <span className="text-sm font-medium">{skill.name}</span>
-                                  <span className="text-sm text-muted-foreground">
-                                    {skill.level}%
-                                  </span>
+                                  <div className="flex items-center space-x-2">
+                                    <span className="text-sm text-muted-foreground">
+                                      {skill.level}%
+                                    </span>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleEdit(skill, "skill")}
+                                    >
+                                      <Edit className="h-3 w-3" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleDelete(skill.id, "skill")}
+                                    >
+                                      <Trash2 className="h-3 w-3" />
+                                    </Button>
+                                  </div>
                                 </div>
                                 <div className="w-full bg-muted rounded-full h-2">
                                   <div 
